@@ -16,6 +16,9 @@
                 helper: "clone",
                 revert: false,
                 cursor: "crosshair",
+                stop: function(event, ui) {
+                    console.log(ui);
+                }
             });
 
             $("#id_form_sortable_trash").droppable({
