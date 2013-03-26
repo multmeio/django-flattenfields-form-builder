@@ -38,6 +38,13 @@ class TextFieldsForm(Form):
         label=u"Caixa de Texto",
     )
 
+    def __init__(self, *args, **kwargs):
+        super(TextFieldsForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'data-typeconfig': 'text_fields_configs'
+            })
+
 
 class MultipleChoiceFieldsForm(Form):
     select_multiple = CharField(
@@ -51,6 +58,13 @@ class MultipleChoiceFieldsForm(Form):
         label=u"Multi-seleções",
         choices=SAMPLE_CHOICES
     )
+
+    def __init__(self, *args, **kwargs):
+        super(MultipleChoiceFieldsForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'data-typeconfig': 'multiple_choice_fields_configs'
+            })
 
 
 class SingleChoiceFieldsForm(Form):
@@ -66,6 +80,25 @@ class SingleChoiceFieldsForm(Form):
         label=u"Única Seleção"
     )
 
-class CustomDynamicFieldForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SingleChoiceFieldsForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'data-typeconfig': 'single_choice_fields_configs'
+            })
+
+
+class TextFieldsConfigsForm(ModelForm):
+    class Meta:
+        model = CustomDynamicField
+        exclude = ['choices']
+
+
+class MultipleChoiceFieldsConfigsForm(ModelForm):
+    class Meta:
+        model = CustomDynamicField
+
+
+class SingleChoiceFieldsConfigsForm(ModelForm):
     class Meta:
         model = CustomDynamicField
