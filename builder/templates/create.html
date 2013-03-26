@@ -8,7 +8,13 @@
             $('#tabs').tab();
 
             $("#id_form_sortable").sortable({
-                revert: true
+                revert: true,
+                receive: function(event, ui) {
+                    var item = $(this).data().sortable.currentItem;
+                    var rand_id = Math.floor(Math.random()*99999);
+                    item.attr('data-id', rand_id);
+                    $("#myModal").modal();
+                }
             });
 
             $(".control-group").draggable({
@@ -16,9 +22,6 @@
                 helper: "clone",
                 revert: false,
                 cursor: "crosshair",
-                stop: function(event, ui) {
-                    console.log(ui);
-                }
             });
 
             $("#id_form_sortable_trash").droppable({
@@ -86,4 +89,29 @@
 
         </div>
     </div>
+
+
+<!-- Modal -->
+<div class="modal hide fade out" id="myModal"
+     role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>
+            Formulário de Configuração de Campos
+        </h3>
+    </div>
+
+    <form method="post" class="form-horizontal">
+        {% csrf_token %}
+
+        <div class="modal-body">
+            {{ dynamic_field_form|as_bootstrap }}
+        </div>
+
+        <div class="modal-footer">
+            <a class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</a>
+            <button class="btn btn-primary" type="submit">Salvar</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

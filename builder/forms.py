@@ -2,6 +2,9 @@
 # encoding: utf-8
 
 from django.forms import *
+from hstore_flattenfields.forms import HStoreModelForm
+
+from models import *
 
 SAMPLE_CHOICES = [(x, x) for x in xrange(0, 5)]
 
@@ -62,3 +65,7 @@ class SingleChoiceFieldsForm(Form):
         choices=SAMPLE_CHOICES,
         label=u"Única Seleção"
     )
+
+class CustomDynamicFieldForm(ModelForm):
+    class Meta:
+        model = CustomDynamicField

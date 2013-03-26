@@ -15,6 +15,7 @@ def create(request):
         'text_fields_form': TextFieldsForm(),
         'multiple_choice_fields_form': MultipleChoiceFieldsForm(),
         'single_choice_fields_form': SingleChoiceFieldsForm(),
+        'dynamic_field_form': CustomDynamicFieldForm()
     }
     return render_to_response('create.html', data,
         context_instance=RequestContext(request))
