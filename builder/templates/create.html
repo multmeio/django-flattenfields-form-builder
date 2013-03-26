@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_toolkit %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#tabs').tab();
+
+            $("#id_form_sortable").sortable({
+                revert: true
+            });
+
+            $(".control-group").draggable({
+                connectToSortable: "#id_form_sortable",
+                helper: "clone",
+                revert: false,
+                cursor: "crosshair",
+            });
+
+            $("#id_form_sortable_trash").droppable({
+                drop: function(event, ui) {
+                    $(ui.draggable).remove();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="row clearfix">
+        <div class="span6">
+            <div class="clearfix">
+                <h2>Your Form</h2>
+                <hr>
+                <form id="id_form_sortable" class="form-horizontal well" style="min-height:200px">
+                    <h2 style="text-align:center;">Form Name</h2>
+                </form>
+                <hr>
+                <div class="well" id="id_form_sortable_trash" style="text-align:center;">
+                    <h3>TRASH</h3>
+                </div>
+            </div>
+        </div>
+        <div class="span6">
+            <h2>Components</h2>
+            <hr>
+
+            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                <li class="active">
+                    <a href="#pane1" data-toggle="tab">
+                        Texto
+                    </a>
+                </li>
+                <li>
+                    <a href="#pane2" data-toggle="tab">
+                        Multiplas Seleções
+                    </a>
+                </li>
+                <li>
+                    <a href="#pane3" data-toggle="tab">
+                        Seleções Alternativas
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="pane1">
+                    <form class="form-horizontal">
+                        {{ text_fields_form|as_bootstrap }}
+                    </form>
+                </div>
+                <div class="tab-pane" id="pane2">
+                <h4>Pane 2 Content</h4>
+                    <form class="form-horizontal">
+                        {{ multiple_choice_fields_form|as_bootstrap }}
+                    </form>
+                </div>
+                <div class="tab-pane" id="pane3">
+                    <form class="form-horizontal">
+                        {{ single_choice_fields_form|as_bootstrap }}
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
