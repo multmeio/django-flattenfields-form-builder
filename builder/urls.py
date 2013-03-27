@@ -4,5 +4,12 @@
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('builder.views',
-    url(r'^/?$', view='create', name="create_form"),
+    url(regex=r'^/?$',
+        view='choose_entity',
+        name="choose_entity_view"
+    ),
+    url(regex=r'^create/(?P<entity>[ A-Za-z\d]+)/?$',
+        view='create',
+        name="create_view"
+    ),
 )

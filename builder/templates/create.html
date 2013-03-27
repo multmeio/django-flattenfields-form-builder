@@ -19,13 +19,13 @@
                     if(element.length > 1){
                         element = element.children();
                     }
-                    var modal_name = element.attr('data-typeconfig');
-
-                    $("#id_" + modal_name).modal();
+                    var modal_id = "#id_" + element.attr('data-typeconfig');
+                    $(modal_id).modal();
+                    $(modal_id).attr('field-data-id', rand_id);
                 }
             });
 
-            $(".control-group").draggable({
+            $(".tab-pane form .control-group").draggable({
                 connectToSortable: "#id_form_sortable",
                 helper: "clone",
                 revert: false,

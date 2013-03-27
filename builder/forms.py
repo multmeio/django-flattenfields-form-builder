@@ -2,11 +2,29 @@
 # encoding: utf-8
 
 from django.forms import *
+from django.contrib.contenttypes.models import ContentType
 from hstore_flattenfields.forms import HStoreModelForm
 
 from models import *
 
 SAMPLE_CHOICES = [(x, x) for x in xrange(0, 5)]
+
+DFIELD_ALLOWED_ENTITIES = [
+    'product'
+]
+
+class ChooseEntityForm(Form):
+    entity = CharField(
+        widget=Select(
+            choices=[
+                (ctype.model_class().__name__, ctype.name.title())\
+                for ctype in ContentType.objects.filter(
+                    name__in=DFIELD_ALLOWED_ENTITIES
+                )
+            ]
+        ),
+        label=u"Entidade"
+    )
 
 class TextFieldsForm(Form):
     text = CharField(
@@ -88,17 +106,33 @@ class SingleChoiceFieldsForm(Form):
             })
 
 
+names_to_disable = ['refer', 'typo']
 class TextFieldsConfigsForm(ModelForm):
     class Meta:
         model = CustomDynamicField
         exclude = ['choices']
+
+    def __init__(self, *args, **kwargs):
+        super(TextFieldsConfigsForm, self).__init__(*args, **kwargs)
+        for name in names_to_disable:
+            self.fields[name].widget.attrs['disabled'] = 'disabled'
+
 
 
 class MultipleChoiceFieldsConfigsForm(ModelForm):
     class Meta:
         model = CustomDynamicField
 
+    def __init__(self, *args, **kwargs):
+        super(MultipleChoiceFieldsConfigsForm, self).__init__(*args, **kwargs)
+        for name in names_to_disable:
+            self.fields[name].widget.attrs['disabled'] = 'disabled'
 
 class SingleChoiceFieldsConfigsForm(ModelForm):
     class Meta:
         model = CustomDynamicField
+
+    def __init__(self, *args, **kwargs):
+        super(SingleChoiceFieldsConfigsForm, self).__init__(*args, **kwargs)
+        for name in names_to_disable:
+            self.fields[name].widget.attrs['disabled'] = 'disabled'
