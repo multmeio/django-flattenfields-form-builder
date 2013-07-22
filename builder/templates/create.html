@@ -2,44 +2,6 @@
 
 {% load bootstrap_toolkit %}
 
-{% block extra_js %}
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('#tabs').tab();
-
-            $("#id_form_sortable").sortable({
-                revert: true,
-                receive: function(event, ui) {
-                    var item = $(this).data().sortable.currentItem;
-                    var rand_id = Math.floor(Math.random()*99999);
-                    item.attr('data-id', rand_id);
-
-                    var element = item.children('.controls').children();
-
-                    if(element.length > 1){
-                        element = element.children();
-                    }
-                    var modal_id = "#id_" + element.attr('data-typeconfig');
-                    $(modal_id).modal();
-                    $(modal_id).attr('field-data-id', rand_id);
-                }
-            });
-
-            $(".tab-pane form .control-group").draggable({
-                connectToSortable: "#id_form_sortable",
-                helper: "clone",
-                revert: false,
-                cursor: "crosshair",
-            });
-
-            $("#id_form_sortable_trash").droppable({
-                drop: function(event, ui) {
-                    $(ui.draggable).remove();
-                }
-            });
-        });
-    </script>
-{% endblock %}
 {% block content %}
     <div class="row clearfix">
         <div class="span6">
@@ -47,7 +9,7 @@
                 <h2>Your Form</h2>
                 <hr>
                 <form id="id_form_sortable" class="form-horizontal well" style="min-height:200px">
-                    <h2 style="text-align:center;">Form Name</h2>
+                    <p>Drag here...</p>
                 </form>
                 <hr>
                 <div class="well" id="id_form_sortable_trash" style="text-align:center;">

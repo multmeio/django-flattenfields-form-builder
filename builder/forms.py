@@ -9,17 +9,22 @@ from models import *
 
 SAMPLE_CHOICES = [(x, x) for x in xrange(0, 5)]
 
-DFIELD_ALLOWED_ENTITIES = [
+FORM_BUILDER_ALLOWED_ENTITIES = [
     'product'
+]
+
+FORM_BUILDER_DISABLE_FIELDS = [
+    'refer', 
+    'typo'
 ]
 
 class ChooseEntityForm(Form):
     entity = CharField(
         widget=Select(
             choices=[
-                (ctype.model_class().__name__, ctype.name.title())\
+                (ctype.name, ctype.name.title())\
                 for ctype in ContentType.objects.filter(
-                    name__in=DFIELD_ALLOWED_ENTITIES
+                    name__in=FORM_BUILDER_ALLOWED_ENTITIES
                 )
             ]
         ),
@@ -106,7 +111,6 @@ class SingleChoiceFieldsForm(Form):
             })
 
 
-names_to_disable = ['refer', 'typo']
 class TextFieldsConfigsForm(ModelForm):
     class Meta:
         model = CustomDynamicField
@@ -114,7 +118,7 @@ class TextFieldsConfigsForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TextFieldsConfigsForm, self).__init__(*args, **kwargs)
-        for name in names_to_disable:
+        for name in FORM_BUILDER_DISABLE_FIELDS:
             self.fields[name].widget.attrs['disabled'] = 'disabled'
 
 
@@ -125,8 +129,9 @@ class MultipleChoiceFieldsConfigsForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(MultipleChoiceFieldsConfigsForm, self).__init__(*args, **kwargs)
-        for name in names_to_disable:
+        for name in FORM_BUILDER_DISABLE_FIELDS:
             self.fields[name].widget.attrs['disabled'] = 'disabled'
+
 
 class SingleChoiceFieldsConfigsForm(ModelForm):
     class Meta:
@@ -134,5 +139,5 @@ class SingleChoiceFieldsConfigsForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SingleChoiceFieldsConfigsForm, self).__init__(*args, **kwargs)
-        for name in names_to_disable:
+        for name in FORM_BUILDER_DISABLE_FIELDS:
             self.fields[name].widget.attrs['disabled'] = 'disabled'
