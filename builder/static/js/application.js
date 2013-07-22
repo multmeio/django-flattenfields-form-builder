@@ -46,4 +46,29 @@ $(function() {
             $(modal_id).attr('field-data-id', rand_id);
         },
     });
+
+    $(".form-field-configs").validate({
+        rules:{
+            refer:{
+                required: true
+            },
+            name:{
+                required: true
+            },
+            verbose_name:{
+                required: true
+            },
+            typo:{
+                required: true
+            },
+        },
+        errorClass: "help-block",
+        errorElement: "span",
+        highlight:function(element, errorClass, validClass) {
+            $(element).parents('.control-group').addClass('error');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).parents('.control-group').removeClass('error');
+        }
+    });
 });
