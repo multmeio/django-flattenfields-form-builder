@@ -9,7 +9,9 @@
                 <h2>Your Form</h2>
                 <hr>
                 <form id="id_form_sortable" class="form-horizontal well" style="min-height:200px">
-                    <p>Drag here...</p>
+                    {% for form in dynamic_fields %}
+                        {{ form|as_bootstrap }}
+                    {% endfor %}
                 </form>
                 <hr>
                 <div class="well" id="id_form_sortable_trash" style="text-align:center;">
@@ -71,7 +73,7 @@
         </h3>
     </div>
 
-    <form method="post" class="form-horizontal form-field-configs">
+    <form method="post" class="form-horizontal form-field-configs" id="id_form_text_fields_configs" action="{% url create_dynamic_field %}">
         {% csrf_token %}
 
         <div class="modal-body">
@@ -95,7 +97,7 @@
         </h3>
     </div>
 
-    <form method="post" class="form-horizontal form-field-configs">
+    <form method="post" class="form-horizontal form-field-configs" id="id_form_multiple_choice_fields_configs" action="{% url create_dynamic_field %}">
         {% csrf_token %}
 
         <div class="modal-body">
@@ -119,7 +121,7 @@
         </h3>
     </div>
 
-    <form method="post" class="form-horizontal form-field-configs">
+    <form method="post" class="form-horizontal form-field-configs" id="id_form_single_choice_fields_configs" action="{% url create_dynamic_field %}">
         {% csrf_token %}
 
         <div class="modal-body">
