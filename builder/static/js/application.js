@@ -136,13 +136,20 @@ $(function() {
         clean_form($(this).find('form'));
     });
 
+    $.validator.addMethod("slug", function(value, element) {
+        return /^[a-z0-9_-]+$/.test(value);
+        }, 
+        "Por favor, este campo não pode conter espaços ou cacacteres especiais."
+    );
+
     $(".form-field-configs").validate({
         rules:{
             refer:{
                 required: true
             },
             name:{
-                required: true
+                required: true,
+                slug: true,
             },
             verbose_name:{
                 required: true
