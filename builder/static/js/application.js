@@ -92,43 +92,49 @@ $(function() {
     });
 
     // Override Forms events
-    $(".form-field-configs").submit(function(){
-        var action = $(this).attr('action');
-        var these = this;
+    // $(".form-field-configs").submit(function(){
+    //     var action = $(this).attr('action');
+    //     var these = this;
         
-        var result = $.ajax({
-            async: false,
-            data: $(this).serialize(),
-            type: 'POST',
-            url: action,
-            dataType: 'json',
-        }).success(function(data) {
-            // Update the field
-            var update_url = 'update/dynamic/field/';
-            if ($(these).attr('action').search(update_url) != -1) {
-                var old_name = $(these).attr('action').split(update_url)[1];
-                var element = $('[name$=' + old_name +']');
-                element.val(data.default_value);
-                label = $('[for=' + element.attr('id') + ']');
-                label.html(data.verbose_name);
+    //     var result = $.ajax({
+    //         async: false,
+    //         data: $(this).serialize(),
+    //         type: 'POST',
+    //         url: action,
+    //         dataType: 'json',
+    //     }).success(function(data) {
+    //         // Update the field
+    //         // var update_url = 'update/dynamic/field/';
+    //         // if ($(these).attr('action').search(update_url) != -1) {
+    //         //     var old_name = $(these).attr('action').split(update_url)[1];
+    //         //     var element = $('[name$=' + old_name +']');
+    //         // } else {
+    //         //     var element = $("#id_form_sortable").data()
+    //         //         .sortable.currentItem.find('.controls').children();
+    //         // }; 
+            
+    //         // element.val(data.default_value);
+    //         // label = $('[for=' + element.attr('id') + ']');
+    //         // label.html(data.verbose_name);
+            
+    //         // var old_id = element.attr('id');
+    //         // var old_name = old_id.split(old_id.match('-[0-9]-'))[1];
+    //         // if (old_name != data.name) {
+    //         //     var new_id = (old_id.split(old_id.match('-[0-9]-'))[0] + 
+    //         //                   old_id.match('-[0-9]-')) + data.name;
                 
-                var old_id = element.attr('id');
-                var old_name = old_id.split(old_id.match('-[0-9]-'))[1]
-                if (old_name != data.name) {
-                    var new_id = (old_id.split(old_id.match('-[0-9]-'))[0] + 
-                                  old_id.match('-[0-9]-')) + data.name;
-                    
-                    element.attr('id', new_id);
-                    new_id = element.attr('id');
-                    label.attr('for', new_id);
-                    element.attr('name', new_id.replace('id_', ''));
-                };
-            }; 
-        });
+    //         //     element.attr('id', new_id);
+    //         //     new_id = element.attr('id');
+    //         //     label.attr('for', new_id);
+    //         //     element.attr('name', new_id.replace('id_', ''));
+    //         // } else if (old_name == undefined) {
+                
+    //         // };
+    //     });
 
-        $(this).parents('.modal').modal('hide');
-        return false;
-    });
+    //     $(this).parents('.modal').modal('hide');
+    //     return false;
+    // });
 
 
     // Validade forms
@@ -138,8 +144,7 @@ $(function() {
 
     $.validator.addMethod("slug", function(value, element) {
         return /^[a-z0-9_-]+$/.test(value);
-        }, 
-        "Por favor, este campo não pode conter espaços ou cacacteres especiais."
+        }, "Por favor, este campo não pode conter espaços ou cacacteres especiais."
     );
 
     $(".form-field-configs").validate({

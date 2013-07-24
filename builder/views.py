@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from django.template import RequestContext
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import simplejson as json
 from django.core.serializers.python import Serializer
 from django.db.models.fields import FieldDoesNotExist
@@ -78,6 +78,7 @@ def create(request, entity):
         'refer': entity
     }
     data = {
+        'refer': entity,
         'dynamic_fields': DynamicFieldFormSet(),
         'text_fields_form': TextFieldsForm(),
         'multiple_choice_fields_form': MultipleChoiceFieldsForm(),
@@ -104,38 +105,27 @@ def _parse_serialize(queryset):
     return serialized
 
 def create_dynamic_field(request):
-    data = {}
     dynamic_field_form = CustomDynamicFieldForm(
         request.POST or None
     )
     if dynamic_field_form.is_valid():
         dynamic_field = dynamic_field_form.save()
+        return redirect('create_view', dynamic_field.refer)
+    return HttpResponseRedirect(redirect_to=request.path)
+
+def get_dynamic_field(request, dfield_name):
+    try:
         data = _parse_serialize(
-            CustomDynamicField.objects.filter(pk=dynamic_field.pk)
+            CustomDynamicField.objects.filter(name=dfield_name)
         )[0]
+    except:
+        data = {}
     return HttpResponse(
         json.dumps(data), 
         mimetype="application/json"
     )
-def get_dynamic_field(request, dfield_name):
-    data = {}
-    try:
-        dynamic_field = CustomDynamicField.objects.get(
-            name=dfield_name
-        )
-    except CustomDynamicField.DoesNotExist:
-        pass
-    else:
-        data = _parse_serialize(
-            CustomDynamicField.objects.filter(pk=dynamic_field.pk)
-        )[0]
-        return HttpResponse(
-            json.dumps(data), 
-            mimetype="application/json"
-        )
 
 def update_dynamic_field(request, dfield_name):
-    data = {}
     try:
         dynamic_field = CustomDynamicField.objects.get(
             name=dfield_name
@@ -148,27 +138,17 @@ def update_dynamic_field(request, dfield_name):
             instance=dynamic_field
         )
         if dynamic_field_form.is_valid():
-            dynamic_field = dynamic_field_form.save()
-            data = _parse_serialize(
-                CustomDynamicField.objects.filter(pk=dynamic_field.pk)
-            )[0]
-    return HttpResponse(
-        json.dumps(data), 
-        mimetype="application/json"
-    )
+            dynamic_field_form.save()
+            return redirect('create_view', dynamic_field.refer)
+    return HttpResponseRedirect(redirect_to=request.path)
 
 def delete_dynamic_field(request, dfield_name):
-    data = {}
     try:
         dynamic_field = CustomDynamicField.objects.get(
             name=dfield_name
         )
         dynamic_field.delete()
-        data = {'success': True}
+        return HttpResponse(json.dumps({}), mimetype="application/json")
     except:
-        pass
-    return HttpResponse(
-        json.dumps(data), 
-        mimetype="application/json"
-    )
-
+        return HttpResponseRedirect(redirect_to=request.path)
+    
