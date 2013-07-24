@@ -4,6 +4,10 @@
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.utils import simplejson as json
+from django.core.serializers.python import Serializer
+from django.db.models.fields import FieldDoesNotExist
+from StringIO import StringIO
+
 from django.shortcuts import (
     render_to_response,
     get_object_or_404,
@@ -16,42 +20,6 @@ def write(obj, **kw):
 
 from forms import *
 from models import *
-
-
-def choose_entity(request):
-    choose_entity_form = ChooseEntityForm(request.POST or None)
-
-    if choose_entity_form.is_valid():
-        entity = choose_entity_form.cleaned_data['entity']
-        return redirect('create_view', entity=entity)
-
-    data = {
-        'choose_entity_form': choose_entity_form
-    }
-    return render_to_response('choose_entity.html', data,
-        context_instance=RequestContext(request))
-
-def create(request, entity):
-    initial_entity = {
-        'refer': entity
-    }
-    data = {
-        'dynamic_fields': DynamicFieldFormSet(),
-        'text_fields_form': TextFieldsForm(),
-        'multiple_choice_fields_form': MultipleChoiceFieldsForm(),
-        'single_choice_fields_form': SingleChoiceFieldsForm(),
-        'text_fields_configs_form': TextFieldsConfigsForm(initial=initial_entity),
-        'multiple_choice_fields_configs_form': MultipleChoiceFieldsConfigsForm(initial=initial_entity),
-        'single_choice_fields_configs_form': SingleChoiceFieldsConfigsForm(initial=initial_entity),
-    }
-    return render_to_response('create.html', data,
-        context_instance=RequestContext(request))
-
-
-from StringIO import StringIO
-
-from django.core.serializers.python import Serializer
-from django.db.models.fields import FieldDoesNotExist
 
 
 class InheritanceSerializer(Serializer):
@@ -91,6 +59,35 @@ class InheritanceSerializer(Serializer):
 
         self.end_serialization()
         return self.getvalue()
+
+def choose_entity(request):
+    choose_entity_form = ChooseEntityForm(request.POST or None)
+
+    if choose_entity_form.is_valid():
+        entity = choose_entity_form.cleaned_data['entity']
+        return redirect('create_view', entity=entity)
+
+    data = {
+        'choose_entity_form': choose_entity_form
+    }
+    return render_to_response('choose_entity.html', data,
+        context_instance=RequestContext(request))
+
+def create(request, entity):
+    initial_entity = {
+        'refer': entity
+    }
+    data = {
+        'dynamic_fields': DynamicFieldFormSet(),
+        'text_fields_form': TextFieldsForm(),
+        'multiple_choice_fields_form': MultipleChoiceFieldsForm(),
+        'single_choice_fields_form': SingleChoiceFieldsForm(),
+        'text_fields_configs_form': TextFieldsConfigsForm(initial=initial_entity),
+        'multiple_choice_fields_configs_form': MultipleChoiceFieldsConfigsForm(initial=initial_entity),
+        'single_choice_fields_configs_form': SingleChoiceFieldsConfigsForm(initial=initial_entity),
+    }
+    return render_to_response('create.html', data,
+        context_instance=RequestContext(request))
 
 def _parse_serialize(queryset):
     serialized = [
